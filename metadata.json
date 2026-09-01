@@ -1,0 +1,8 @@
+{
+  "name": "Kabir Gureja — Personal Portfolio",
+  "description": "An interactive personal digital world and portfolio for Kabir Gureja — builder, roboticist, AI experimenter, and creator.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

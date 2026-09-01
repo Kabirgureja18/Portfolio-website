@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/* Lenis & Smooth Scroll Setup */
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
+}
+
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+@layer base {
+  :root {
+    --font-display: 'Syne', sans-serif;
+    --font-sans: 'Epilogue', sans-serif;
+    --font-serif: 'Newsreader', serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #0c0c0e;
+    color: #e8e6e3;
+  }
+}
+
+
+.font-display {
+  font-family: 'Syne', sans-serif;
+}
+
+.font-sans-alt {
+  font-family: 'Epilogue', sans-serif;
+}
+
+.font-serif-editorial {
+  font-family: 'Newsreader', serif;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0c0c0e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}
+
+/* Subtle dot grid for specific technical modules */
+.bg-tech-grid {
+  background-size: 24px 24px;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 0);
+}
+
+.bg-comic-dots {
+  background-size: 16px 16px;
+  background-image: radial-gradient(rgba(239, 68, 68, 0.15) 1.5px, transparent 0);
+}
+
+.bg-lab-grid {
+  background-size: 32px 32px;
+  background-image: linear-gradient(to right, rgba(34, 197, 94, 0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(34, 197, 94, 0.05) 1px, transparent 1px);
+}
+
+/* Custom Cursor Desktop Optimization */
+@media (pointer: fine) {
+  html.has-custom-cursor,
+  html.has-custom-cursor body {
+    cursor: none !important;
+  }
+
+  html.has-custom-cursor a,
+  html.has-custom-cursor button,
+  html.has-custom-cursor [role="button"],
+  html.has-custom-cursor [data-interactive="true"],
+  html.has-custom-cursor .cursor-pointer {
+    cursor: none !important;
+  }
+
+  html.has-custom-cursor input[type="text"],
+  html.has-custom-cursor input[type="email"],
+  html.has-custom-cursor input[type="search"],
+  html.has-custom-cursor textarea {
+    cursor: text !important;
+  }
+}
+

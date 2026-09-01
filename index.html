@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kabir Gureja — Personal Portfolio</title>
+    <meta name="description" content="Personal portfolio and digital world of Kabir Gureja — builder, roboticist, AI experimenter, and creator." />
+    <meta property="og:title" content="Kabir Gureja — Personal Portfolio" />
+    <meta property="og:description" content="Personal digital world and interactive portfolio of Kabir Gureja." />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Syne:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      .loader{
+        position:fixed;
+        inset:0;
+        z-index:999999;
+        width:100vw;
+        height:100vh;
+        background:#000;
+        overflow:hidden;
+        transition:opacity .65s cubic-bezier(.76,0,.24,1);
+      }
+
+      .loader.is-done{
+        opacity:0;
+        pointer-events:none;
+      }
+
+      .loader-inner{
+        position:absolute;
+        inset:0;
+      }
+
+      /* Center percentage */
+      .percent{
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        color:#f01932;
+        font-family:"IBM Plex Mono","Courier New",monospace;
+        font-size:clamp(28px,2.55vw,49px);
+        font-weight:500;
+        line-height:1;
+        letter-spacing:.04em;
+        white-space:nowrap;
+        font-variant-numeric:tabular-nums;
+      }
+
+      /* The parentheses are intentionally separate, matching the reference */
+      .percent::before{content:"( "; }
+      .percent::after{content:" )"; }
+
+      /* Left status stack */
+      .status{
+        position:absolute;
+        left:2.05vw;
+        top:50%;
+        transform:translateY(-50%);
+        width:220px;
+        font-size:clamp(6px,.54vw,10px);
+        line-height:1.55;
+        font-weight:400;
+        letter-spacing:.02em;
+        text-transform:uppercase;
+        font-family:"IBM Plex Mono","Courier New",monospace;
+      }
+
+      .status-line{
+        height:1.55em;
+        color:#777;
+        white-space:nowrap;
+        opacity:0;
+        transform:translateY(2px);
+        transition:opacity .18s ease,transform .18s ease,color .18s ease;
+      }
+
+      .status-line.visible{
+        opacity:1;
+        transform:translateY(0);
+      }
+
+      .status-line.active{
+        color:#f01932;
+      }
+
+      /* Right paragraph */
+      .message{
+        position:absolute;
+        right:2.05vw;
+        top:50%;
+        transform:translateY(-50%);
+        width:170px;
+        color:#bcbcbc;
+        font-size:clamp(6px,.54vw,10px);
+        line-height:1.45;
+        font-weight:400;
+        letter-spacing:.01em;
+        text-transform:uppercase;
+        font-family:"IBM Plex Mono","Courier New",monospace;
+      }
+
+      /* Small cursor-like mark visible above/right of the composition */
+      .mark{
+        position:absolute;
+        right:24.4vw;
+        top:37.2%;
+        width:2px;
+        height:2px;
+        background:#fff;
+        opacity:.85;
+      }
+
+      @media(max-width:700px){
+        .status{
+          left:4vw;
+          width:30vw;
+        }
+
+        .message{
+          right:4vw;
+          width:27vw;
+        }
+
+        .percent{
+          font-size:7vw;
+        }
+
+        .mark{
+          right:24vw;
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-[#0c0c0e] text-[#e8e6e3] antialiased selection:bg-[#ff3b30] selection:text-white overflow-x-hidden">
+    <div class="loader" id="loader">
+      <div class="loader-inner">
+        <div class="status" id="status">
+          <div class="status-line">INITIALIZING CORE...</div>
+          <div class="status-line">HANDSHAKING NETWORK...</div>
+          <div class="status-line">VERIFYING ASSETS...</div>
+          <div class="status-line">MOUNTING INTERFACE...</div>
+          <div class="status-line">RESOLVING DEPENDENCIES...</div>
+          <div class="status-line">FINALIZING SESSION...</div>
+        </div>
+
+        <div class="percent" id="percent">0%</div>
+
+        <div class="message">
+          HANG TIGHT, EXPLORER. THE DATA TRANSFER IS IN PROGRESS.
+          IT MIGHT TAKE A MOMENT, BUT THE JOURNEY AHEAD IS WORTH THE WAIT...
+        </div>
+
+        <div class="mark"></div>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const loader = document.getElementById("loader");
+        if (!loader) return;
+        const percent = document.getElementById("percent");
+        const lines = [...document.querySelectorAll(".status-line")];
+
+        const DURATION = 2500;
+        const EXIT_DELAY = 180;
+        const EXIT_DURATION = 650;
+
+        const start = performance.now();
+
+        const clamp = (n,a,b) => Math.min(b,Math.max(a,n));
+
+        function tick(now){
+          const elapsed = now - start;
+          const t = clamp(elapsed / DURATION,0,1);
+
+          const value = Math.min(100,Math.floor(t * 100));
+          if (percent) percent.textContent = value + "%";
+
+          const visibleCount = Math.min(
+            lines.length,
+            Math.floor(t * lines.length * 1.08) + 1
+          );
+
+          lines.forEach((line,i) => {
+            line.classList.toggle("visible", i < visibleCount);
+            line.classList.toggle(
+              "active",
+              i === Math.min(visibleCount - 1, lines.length - 1)
+            );
+          });
+
+          if(t < 1){
+            requestAnimationFrame(tick);
+            return;
+          }
+
+          if (percent) percent.textContent = "100%";
+
+          setTimeout(() => {
+            loader.classList.add("is-done");
+
+            setTimeout(() => {
+              loader.remove();
+              document.documentElement.style.overflow = "";
+              document.body.style.overflow = "";
+            }, EXIT_DURATION);
+
+          }, EXIT_DELAY);
+        }
+
+        document.documentElement.style.overflow = "hidden";
+        document.body.style.overflow = "hidden";
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
